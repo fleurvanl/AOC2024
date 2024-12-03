@@ -29,45 +29,6 @@ def check_report_dampner(numbers, level):
     return False
 
 
-    # diffs = []
-    # if level > 1:
-    #     return False
-    # for i, num in enumerate(numbers):
-    #     if i is not len(numbers) - 1:
-    #         diff_with_next = int(numbers[i]) - int(numbers[i + 1])
-    #         diffs.append(diff_with_next)
-    #         # check if this is right
-    #         if diff_with_next == 0:
-    #             level += 1
-    #             numbers.pop(i + 1)
-    #             if check_report_dampner(numbers, level):
-    #                 return True
-    #             else:
-    #                 return False
-    #         if diff_with_next > 3 or diff_with_next < -3:
-    #             level += 1
-    #             numbers.pop(i + 1)
-    #             if check_report_dampner(numbers, level):
-    #                 return True
-    #             else:
-    #                 return False
-    #         if all(num > 0 for num in diffs) or all(num < 0 for num in diffs):
-    #             continue
-    #         else:
-    #             level += 1
-    #             numbers.pop(i + 1)
-    #             if check_report_dampner(numbers, level):
-    #                 return True
-    #             else:
-    #                 return False
-    # # if all positive: every step is a decrease
-    # if all(num > 0 for num in diffs):
-    #     return True
-    # # if all negative: every step is an increase
-    # elif all(num < 0 for num in diffs):
-    #     return True
-
-
 def main():
     file = FileHandling.read_file('input/day02.txt')
     lines = file.split('\n')
