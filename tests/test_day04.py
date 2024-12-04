@@ -1,4 +1,4 @@
-from day04 import look_left_right, look_down, look_diagonally, look_up
+from day04 import look_left_right, look_down, look_up, look_diagonally, find_x_mas
 
 import pytest
 
@@ -64,3 +64,22 @@ def test_look_diagonal(diagonal_up, diagonal_down):
     assert look_diagonally(3, 'MSAMASMSMX', diagonal_down) == 1
 
 
+@pytest.fixture
+def x_mas():
+    return ['MMMSXXMASM',
+            'MSAMXMSMSA',
+            'AMXSXMAAMM',
+            'MSAMASMSMX',
+            'XMASAMXAMM',
+            'XXAMMXXAMA',
+            'SMSMSASXSS',
+            'SAXAMASAAA',
+            'MAMMMXMMMM',
+            'MXMXAXMASX']
+
+
+def test_find_x_mas(x_mas):
+    num_x_mas = 0
+    for i, line in enumerate(x_mas):
+        num_x_mas += find_x_mas(i, line, x_mas)
+    assert num_x_mas == 9
