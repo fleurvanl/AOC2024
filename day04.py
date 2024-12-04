@@ -15,6 +15,19 @@ def look_left_right(line):
     return num_xmas
 
 
+def look_down(i, line, lines):
+    num_xmas = 0
+    # make sure we avoid index errors as we are going to look in 4 lines under the current line
+    if i + 3 <= len(lines):
+        for j, letter in enumerate(line):
+            if letter == 'X':
+                if lines[i + 1][j] == 'M':
+                    if lines[i + 2][j] == 'A':
+                        if lines[i + 3][j] == 'S':
+                            num_xmas += 1
+    return num_xmas
+
+
 def look_diagonally(i, line, lines):
     num_xmas = 0
     # look down to the right
@@ -64,14 +77,7 @@ def main():
         # look left to right and right to left
         look_left_right(line)
         # look down
-        # make sure we avoid index errors as we are going to look in 4 lines under the current line
-        if i + 3 < len(lines):
-            for j, letter in enumerate(line):
-                if letter == 'X':
-                    if lines[i+1][j] == 'M':
-                        if lines[i+2][j] == 'A':
-                            if lines[i+3][j] == 'S':
-                                num_xmas += 1
+        num_xmas += look_down(i, line, lines)
         # look up
         # make sure we avoid index errors as we are going to look in 4 lines above the current line
         if i - 3 >= 0:
