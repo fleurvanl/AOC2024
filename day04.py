@@ -82,10 +82,48 @@ def look_diagonally(i, line, lines):
     return num_xmas
 
 
+def find_x_mas(i, line, lines):
+    num_x_mas = 0
+    if i + 2 < len(lines):
+        for j, letter in enumerate(line):
+            if j + 2 < len(line):
+                # find MAS
+                if letter == 'M':
+                    # find M . M
+                    #      . A .
+                    #      S . S
+                    if line[j+2] == 'M':
+                        if lines[i + 1][j + 1] == 'A' and lines[i + 2][j] == 'S' and lines[i + 2][j + 2] == 'S':
+                            num_x_mas += 1
+                    # find M . S
+                    #      . A .
+                    #      M . S
+                    if line[j+2] == 'S':
+                        if lines[i + 1][j + 1] == 'A' and lines[i + 2][j] == 'M' and lines[i + 2][j + 2] == 'S':
+                            num_x_mas += 1
+
+                # find SAM
+                elif letter == 'S':
+                    # find S . M
+                    #      . A .
+                    #      S . M
+                    if line[j + 2] == 'M':
+                        if lines[i + 1][j + 1] == 'A' and lines[i + 2][j] == 'S' and lines[i + 2][j + 2] == 'M':
+                            num_x_mas += 1
+                    # find S . S
+                    #      . A .
+                    #      M . M
+                    if line[j + 2] == 'S':
+                        if lines[i + 1][j + 1] == 'A' and lines[i + 2][j] == 'M' and lines[i + 2][j + 2] == 'M':
+                            num_x_mas += 1
+    return num_x_mas
+
+
 def main():
     file = FileHandling.read_file('input/day04.txt')
     lines = file.split('\n')
     num_xmas = 0
+    num_x_mas = 0
     for i, line in enumerate(lines):
         # look left to right and right to left
         num_xmas += look_left_right(line)
@@ -95,7 +133,10 @@ def main():
         num_xmas += look_up(i, line, lines)
         # look diagonally
         num_xmas += look_diagonally(i, line, lines)
-    print(num_xmas)
+        # find x-mas
+        num_x_mas += find_x_mas(i, line, lines)
+    print(f'first star: {num_xmas}')
+    print(f'second star: {num_x_mas}')
 
 
 if __name__ == '__main__':
