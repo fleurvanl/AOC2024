@@ -1,4 +1,4 @@
-from day04 import look_left_right, look_down, look_diagonally
+from day04 import look_left_right, look_down, look_diagonally, look_up
 
 import pytest
 
@@ -25,4 +25,42 @@ def down():
 
 def test_look_down(down):
     assert look_down(0, 'MSAMASMSMX', down) == 1
+
+
+@pytest.fixture
+def up():
+    return ['MSAMXMSMSA',
+            'AMXSXMAAMM',
+            'MSAMASMSMX',
+            'XMASAMXAMM']
+
+
+def test_look_up(up):
+    assert look_up(3, 'XMASAMXAMM', up) == 1
+
+
+@pytest.fixture
+def diagonal_up():
+    return ['SMSMSASXSS',
+            'SAXAMASAAA',
+            'MAMMMXMMMM',
+            'MXMXAXMASX']
+
+
+@pytest.fixture
+def diagonal_down():
+    return ['MMMSXXMASM',
+            'MSAMXMSMSA',
+            'AMXSXMAAMM',
+            'MSAMASMSMX',
+            'XMASAMXAMM',
+            'XXAMMXXAMA',
+            'SMSMSASXSS']
+
+
+def test_look_diagonal(diagonal_up, diagonal_down):
+    assert look_diagonally(3, 'MXMXAXMASX', diagonal_up) == 6
+    assert look_diagonally(0, 'MMMSXXMASM', diagonal_down) == 1
+    assert look_diagonally(3, 'MSAMASMSMX', diagonal_down) == 1
+
 
