@@ -3,18 +3,66 @@ import re
 from utils.file_handling import FileHandling
 
 
+def look_left_right(line):
+    num_xmas = 0
+    # find left to right
+    left_to_right = len(re.findall(r'XMAS', line))
+    num_xmas += left_to_right
+    # find right to left
+    line = ''.join(list(reversed([i for i in line])))
+    right_to_left = len(re.findall(r'XMAS', line))
+    num_xmas += right_to_left
+    return num_xmas
+
+
+def look_diagonally(i, line, lines):
+    num_xmas = 0
+    # look down to the right
+    if i + 3 < len(lines):
+        for j, letter in enumerate(line):
+            if j + 3 < len(line):
+                if letter == 'X':
+                    if lines[i + 1][j + 1] == 'M':
+                        if lines[i + 2][j + 2] == 'A':
+                            if lines[i + 3][j + 3] == 'S':
+                                num_xmas += 1
+    # look down to the left
+    if i + 3 < len(lines):
+        for j, letter in enumerate(line):
+            if j - 3 >= 0:
+                if letter == 'X':
+                    if lines[i + 1][j - 1] == 'M':
+                        if lines[i + 2][j - 2] == 'A':
+                            if lines[i + 3][j - 3] == 'S':
+                                num_xmas += 1
+    # look up to the right
+    if i - 3 >= 0:
+        for j, letter in enumerate(line):
+            if j + 3 < len(line):
+                if letter == 'X':
+                    if lines[i - 1][j + 1] == 'M':
+                        if lines[i - 2][j + 2] == 'A':
+                            if lines[i - 3][j + 3] == 'S':
+                                num_xmas += 1
+    # look up to the left
+    if i - 3 >= 0:
+        for j, letter in enumerate(line):
+            if j - 3 >= 0:
+                if letter == 'X':
+                    if lines[i - 1][j - 1] == 'M':
+                        if lines[i - 2][j - 2] == 'A':
+                            if lines[i - 3][j - 3] == 'S':
+                                num_xmas += 1
+    return num_xmas
+
+
 def main():
     file = FileHandling.read_file('input/day04.txt')
     lines = file.split('\n')
     num_xmas = 0
-    # find left to right
     for i, line in enumerate(lines):
-        left_to_right = len(re.findall(r'XMAS', line))
-        num_xmas += left_to_right
-        # find right to left
-        line = ''.join(list(reversed([i for i in line])))
-        right_to_left = len(re.findall(r'XMAS', line))
-        num_xmas += right_to_left
+        # look left to right and right to left
+        look_left_right(line)
         # look down
         # make sure we avoid index errors as we are going to look in 4 lines under the current line
         if i + 3 < len(lines):
@@ -26,7 +74,7 @@ def main():
                                 num_xmas += 1
         # look up
         # make sure we avoid index errors as we are going to look in 4 lines above the current line
-        if i - 3 > 0:
+        if i - 3 >= 0:
             for j, letter in enumerate(line):
                 if letter == 'X':
                     if lines[i-1][j] == 'M':
@@ -34,7 +82,7 @@ def main():
                             if lines[i-3][j] == 'S':
                                 num_xmas += 1
         # look diagonally
-        # oh fuck
+        num_xmas += look_diagonally(i, line, lines)
     print(num_xmas)
 
 
