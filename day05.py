@@ -76,7 +76,6 @@ def sort_update(update, relevant_rules):
 
 
 
-
 def main():
     file = FileHandling.read_file('input/day05.txt')
     lines = file.split('\n')
@@ -98,10 +97,6 @@ def main():
         relevant_rules = find_relevant_rules(update, ordering_rules)
         fixed_updates.append(sort_update(update, relevant_rules))
     print(f'first star: {sum([int(update[len(update) // 2]) for update in fixed_updates])}')
-
-
-
-
 
 
 if __name__ == '__main__':

@@ -1,0 +1,3 @@
+* how to set up a repo that contains pdm
+* returning multiple values in a function requires that they appear in a tuple in testing
+*

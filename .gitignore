@@ -1,6 +1,9 @@
 # Advent of code input
 input/
 
+# Personal
+things_ive_learned.txt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
