@@ -1,6 +1,12 @@
 import pytest
 
-from day06 import find_current_position, move_up_check, move_right_check, move_down_check, move_left_check, change_move
+from day06 import (find_current_position,
+                   move_up_check,
+                   move_right_check,
+                   move_down_check,
+                   move_left_check,
+                   change_move,
+                   walk)
 
 
 @pytest.fixture
@@ -23,6 +29,36 @@ def find_x():
     return ['.....X.....']
 
 
+@pytest.fixture
+def infinite():
+    return ['....#.....',
+            '.........#',
+            '..........',
+            '..#.......',
+            '.......#..',
+            '..........',
+            '.#.#^.....',
+            '........#.',
+            '#.........',
+            '......#...',
+            '']
+
+
+@pytest.fixture
+def run_off_map_right():
+    return ['....#.....',
+            '..........',
+            '..........',
+            '..#.......',
+            '.......#..',
+            '..........',
+            '.#..^.....',
+            '........#.',
+            '#.........',
+            '......#...',
+            '']
+
+
 def test_find_current_position(lines):
     assert find_current_position(lines) == (6, 4)
 
@@ -35,14 +71,16 @@ def test_move_up_check(lines):
     assert move_up_check(lines, 0, 1) == (9999, 9999, False)
 
 
-def test_move_right_check(lines, find_x):
+def test_move_right_check(lines, find_x, run_off_map_right):
     # returns row, column, obstacle, new_spot
     # runs into obstacle
     assert move_right_check(lines, 1, 8) == (1, 8, True)
     # runs into X
     assert move_right_check(find_x, 0, 4) == (0, 5, False)
     # runs off the map
-    assert move_right_check(lines, 0, 10) == (9999, 9999, False)
+    assert move_right_check(lines, 0, 9) == (9999, 9999, False)
+    # runs off the map on the right side
+    assert move_right_check(run_off_map_right, 1, 9) == (9999, 9999, False)
 
 
 def test_move_down_check(lines):
@@ -61,7 +99,7 @@ def test_move_left_check(lines):
     assert move_left_check(lines, 0, 0) == (9999, 9999, False)
 
 
-def test_flow(lines):
+def test_walk(lines):
     visited = 0
 
     # find current position ^
@@ -78,24 +116,27 @@ def test_flow(lines):
 
     counter = 0
 
-    # while we don't run off the map
-    while row != 9999:
-        counter += 1
-        # move in the desired direction; nno movement is made if we met an obstacle
-        row, column, obstacle = current_move(lines, row, column)
-        print(row, column)
-        # mark current spot with X to note where we've been; check in place in case we just ran off the map
-        if row != 9999:
-            lines[row] = lines[row][:column] + 'X' + lines[row][column + 1:]
-        # if we find an obstacle, we change the direction we move in; we do not move
-        if obstacle:
-            current_move = change_move(moves, current_move)
-        if counter > 100:
-            break
+    s1_lines, _ = walk(lines, row, column, moves, current_move)
 
     # count Xs
-    for line in lines:
+    for line in s1_lines:
         visited += line.count('X')
 
-    print(lines)
     assert visited == 41
+
+
+def test_s2(infinite):
+    # write functions for up, down. left and right
+    moves = [move_right_check,
+             move_down_check,
+             move_left_check,
+             move_up_check]
+    current_move = move_up_check
+
+    # find current position ^
+    row, column = find_current_position(infinite)
+    infinite[row] = infinite[row][:column] + 'X' + infinite[row][column + 1:]
+
+    _, infinite = walk(infinite, row, column, moves, current_move)
+
+    assert infinite
