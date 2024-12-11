@@ -6,7 +6,7 @@ from day06 import find_current_position, move_up_check, move_right_check, move_d
 @pytest.fixture
 def lines():
     return ['....#.....',
-            '......X..#',
+            '.........#',
             '..........',
             '..#.......',
             '.......#..',
@@ -18,6 +18,11 @@ def lines():
             '']
 
 
+@pytest.fixture
+def find_x():
+    return ['.....X.....']
+
+
 def test_find_current_position(lines):
     assert find_current_position(lines) == (6, 4)
 
@@ -25,35 +30,35 @@ def test_find_current_position(lines):
 def test_move_up_check(lines):
     # returns row, column, obstacle, new_spot
     # runs into obstacle
-    assert move_up_check(lines, 1, 4) == (1, 4, True, False)
+    assert move_up_check(lines, 1, 4) == (1, 4, True)
     # runs off the map
-    assert move_up_check(lines, 0, 1) == (9999, 9999, False, False)
+    assert move_up_check(lines, 0, 1) == (9999, 9999, False)
 
 
-def test_move_right_check(lines):
+def test_move_right_check(lines, find_x):
     # returns row, column, obstacle, new_spot
     # runs into obstacle
-    assert move_right_check(lines, 1, 8) == (1, 8, True, False)
+    assert move_right_check(lines, 1, 8) == (1, 8, True)
     # runs into X
-    assert move_right_check(lines, 1, 5) == (1, 6, False, False)
+    assert move_right_check(find_x, 0, 4) == (0, 5, False)
     # runs off the map
-    assert move_right_check(lines, 0, 10) == (9999, 9999, False, False)
+    assert move_right_check(lines, 0, 10) == (9999, 9999, False)
 
 
 def test_move_down_check(lines):
     # returns row, column, obstacle, new_spot
     # moves to the next row
-    assert move_down_check(lines, 1, 8) == (2, 8, False, True)
+    assert move_down_check(lines, 1, 8) == (2, 8, False)
     # runs off the map
-    assert move_down_check(lines, 9, 10) == (9999, 9999, False, False)
+    assert move_down_check(lines, 9, 10) == (9999, 9999, False)
 
 
 def test_move_left_check(lines):
     # returns row, column, obstacle, new_spot
     # moves to the left
-    assert move_left_check(lines, 6, 8) == (6, 7, False, True)
+    assert move_left_check(lines, 6, 8) == (6, 7, False)
     # runs off the map
-    assert move_left_check(lines, 0, 0) == (9999, 9999, False, False)
+    assert move_left_check(lines, 0, 0) == (9999, 9999, False)
 
 
 def test_flow(lines):
@@ -61,6 +66,8 @@ def test_flow(lines):
 
     # find current position ^
     row, column = find_current_position(lines)
+    # replace '^' with 'X'
+    lines[row] = lines[row][:column] + 'X' + lines[row][column + 1:]
 
     # write functions for up, down. left and right
     moves = [move_right_check,
@@ -75,13 +82,20 @@ def test_flow(lines):
     while row != 9999:
         counter += 1
         # move in the desired direction; nno movement is made if we met an obstacle
-        row, column, obstacle, new_spot = current_move(lines, row, column)
+        row, column, obstacle = current_move(lines, row, column)
+        print(row, column)
+        # mark current spot with X to note where we've been; check in place in case we just ran off the map
+        if row != 9999:
+            lines[row] = lines[row][:column] + 'X' + lines[row][column + 1:]
         # if we find an obstacle, we change the direction we move in; we do not move
         if obstacle:
             current_move = change_move(moves, current_move)
-        # as long as we don't meet an obstacle, we're moving
-        if new_spot:
-            visited += 1
         if counter > 100:
             break
+
+    # count Xs
+    for line in lines:
+        visited += line.count('X')
+
+    print(lines)
     assert visited == 41
