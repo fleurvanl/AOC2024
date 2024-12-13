@@ -19,7 +19,7 @@ def main():
 
     operations = ['*', '+']
 
-    final_calc = 0
+    first_star = 0
 
     for line in lines:
         if line != '':
@@ -30,10 +30,32 @@ def main():
             for combination in operator_combinations:
                 calculation = calculate(components, combination)
                 if int(solution) == calculation:
-                    final_calc += calculation
+                    first_star += calculation
                     break
 
-    print(final_calc)
+    print(f'first star: {first_star}')
+
+    operations = ['*', '+', '|']
+
+    second_star = 0
+
+    for line in lines:
+        if line != '':
+            solution, components = line.split(': ')
+            components = components.split(' ')
+            # Generate all possible combinations of operators
+            operator_combinations = list(product(operations, repeat=len(components) - 1))
+            for combination in operator_combinations:
+                while '|' in combination:
+                    # find indexes of |
+                    # this is gonna mess up the indices if we remove |
+                    index = combination.index('|')
+                    # join number at that index and the next
+                    # remove | from combination
+                calculation = calculate(components, combination)
+                if int(solution) == calculation:
+                    second_star += calculation
+                    break
 
 
 
