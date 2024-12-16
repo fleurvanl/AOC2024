@@ -13,6 +13,19 @@ def calculate(components, combination):
     return result
 
 
+def process_pipe(combination, numbers):
+    temp_operators = list(combination).copy()
+    temp_numbers = numbers.copy()
+    i = 0
+    while i < len(temp_operators):
+        if temp_operators[i] == '|':
+            temp_numbers[i] = temp_numbers[i] + temp_numbers[i + 1]
+            del temp_operators[i]
+            del temp_numbers[i + 1]
+        i += 1
+    return temp_numbers, temp_operators
+
+
 def main():
     file = FileHandling.read_file('input/day07.txt')
     lines = file.split('\n')
@@ -23,12 +36,12 @@ def main():
 
     for line in lines:
         if line != '':
-            solution, components = line.split(': ')
-            components = tuple(components.split(' '))
+            solution, numbers = line.split(': ')
+            numbers = tuple(numbers.split(' '))
             # Generate all possible combinations of operators
-            operator_combinations = list(product(operations, repeat=len(components) - 1))
+            operator_combinations = list(product(operations, repeat=len(numbers) - 1))
             for combination in operator_combinations:
-                calculation = calculate(components, combination)
+                calculation = calculate(numbers, combination)
                 if int(solution) == calculation:
                     first_star += calculation
                     break
@@ -41,22 +54,19 @@ def main():
 
     for line in lines:
         if line != '':
-            solution, components = line.split(': ')
-            components = components.split(' ')
+            solution, numbers = line.split(': ')
+            numbers = numbers.split(' ')
+
             # Generate all possible combinations of operators
-            operator_combinations = list(product(operations, repeat=len(components) - 1))
+            operator_combinations = list(product(operations, repeat=len(numbers) - 1))
             for combination in operator_combinations:
-                while '|' in combination:
-                    # find indexes of |
-                    # this is gonna mess up the indices if we remove |
-                    index = combination.index('|')
-                    # join number at that index and the next
-                    # remove | from combination
-                calculation = calculate(components, combination)
+                temp_numbers, temp_operators = process_pipe(combination, numbers)
+                calculation = calculate(temp_numbers, temp_operators)
                 if int(solution) == calculation:
                     second_star += calculation
                     break
 
+    print(f'second star: {second_star}')
 
 
 if __name__ == '__main__':
