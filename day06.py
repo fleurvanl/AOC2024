@@ -100,6 +100,7 @@ def walk(lines, row, column, moves, current_move):
         if count > 10000:
             print('count over 10.000')
             return lines, True
+    print(count)
     # return lines, False, to indicate that we walked off the map and there's no infinite looping (second star solution)
     return lines, False
 
@@ -133,16 +134,21 @@ def main():
     print(f'first star: {visited}')
 
     num_obstructions = 0
-    for i, line in enumerate(lines):
+    for i, line in enumerate(s1_lines):
         for j in range(len(line)):
-            adjusted_lines = lines.copy()
-            # insert obstacle in object
-            adjusted_lines[i] = adjusted_lines[i][:j] + '#' + adjusted_lines[i][j + 1:]
-            _ , infinite = walk(adjusted_lines, initial_row, initial_column, moves, current_move)
-            if infinite:
-                num_obstructions += 1
+            # speed up the process by only placing obstacles in places where the guard would have walked according to
+            # the first part of the exercise
+            if line[j] == 'X':
+                adjusted_lines = lines.copy()
+                # insert obstacle in object
+                adjusted_lines[i] = adjusted_lines[i][:j] + '#' + adjusted_lines[i][j + 1:]
+                _ , infinite = walk(adjusted_lines, initial_row, initial_column, moves, current_move)
+                if infinite:
+                    num_obstructions += 1
 
-    print(f'second star: {num_obstructions}')
+    print(f'second star: {num_obstructions}') # 1435 too low
+    # obstacle cannot be put in guards starting location --> but that should make our solution lower if anything
+    #
 
 
 if __name__ == '__main__':

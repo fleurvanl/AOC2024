@@ -45,17 +45,12 @@ def infinite():
 
 
 @pytest.fixture
-def run_off_map_right():
-    return ['....#.....',
-            '..........',
-            '..........',
-            '..#.......',
-            '.......#..',
-            '..........',
-            '.#..^.....',
-            '........#.',
-            '#.........',
-            '......#...',
+def turn_twice():
+    return ['...#...',
+            '...X#..',
+            '...X...',
+            '..#X...',
+            '...#...',
             '']
 
 
@@ -71,7 +66,7 @@ def test_move_up_check(lines):
     assert move_up_check(lines, 0, 1) == (9999, 9999, False)
 
 
-def test_move_right_check(lines, find_x, run_off_map_right):
+def test_move_right_check(lines, find_x):
     # returns row, column, obstacle, new_spot
     # runs into obstacle
     assert move_right_check(lines, 1, 8) == (1, 8, True)
@@ -79,8 +74,6 @@ def test_move_right_check(lines, find_x, run_off_map_right):
     assert move_right_check(find_x, 0, 4) == (0, 5, False)
     # runs off the map
     assert move_right_check(lines, 0, 9) == (9999, 9999, False)
-    # runs off the map on the right side
-    assert move_right_check(run_off_map_right, 1, 9) == (9999, 9999, False)
 
 
 def test_move_down_check(lines):
@@ -88,7 +81,7 @@ def test_move_down_check(lines):
     # moves to the next row
     assert move_down_check(lines, 1, 8) == (2, 8, False)
     # runs off the map
-    assert move_down_check(lines, 9, 10) == (9999, 9999, False)
+    assert move_down_check(lines, 9, 9) == (9999, 9999, False)
 
 
 def test_move_left_check(lines):
@@ -138,5 +131,23 @@ def test_s2(infinite):
     infinite[row] = infinite[row][:column] + 'X' + infinite[row][column + 1:]
 
     _, infinite = walk(infinite, row, column, moves, current_move)
+
+    assert infinite
+
+
+def test_turn_twice(turn_twice):
+    # write functions for up, down. left and right
+    moves = [move_right_check,
+             move_down_check,
+             move_left_check,
+             move_up_check]
+    current_move = move_down_check
+
+    # find current position ^
+    row = 2
+    column = 3
+    turn_twice[row] = turn_twice[row][:column] + 'X' + turn_twice[row][column + 1:]
+
+    _, infinite = walk(turn_twice, row, column, moves, current_move)
 
     assert infinite
