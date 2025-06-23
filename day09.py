@@ -19,6 +19,32 @@ def visualise_space(disk_map):
     return empty_space_disk_map
 
 
+def find_final_data(empty_space_disk_map, final_num_index):
+    # loop over disk space backwards, starting from the known latest used space
+    for item in range(final_num_index - 1, -1, -1):
+        if empty_space_disk_map[item] is not None:
+            # return the latest used space and its index
+            return (empty_space_disk_map[item], item)
+
+
+
+def move_data(empty_space_disk_map):
+    # keep track of where we've looked at the end of the disk map so we don't have to keep iterating
+    final_num_index = len(empty_space_disk_map)
+    # loop over reorganised disk map
+    for space_index in range(len(empty_space_disk_map)):
+        # make sure the algorithm stops before it messes up the order again
+        if space_index + 1 < final_num_index:
+            # if there's an empty space, we find the last number in the disk map and move it here
+            if empty_space_disk_map[space_index] is None:
+                content, index = find_final_data(empty_space_disk_map, final_num_index)
+                empty_space_disk_map[space_index] = content
+                empty_space_disk_map[index] = None
+                final_num_index = index
+    return empty_space_disk_map
+
+
+
 def main():
     disk_map = FileHandling.read_file('input/day09.txt')
     empty_space_disk_map = visualise_space(disk_map)
