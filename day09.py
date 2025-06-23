@@ -54,12 +54,31 @@ def calculate_checksum(reorganised_disk_map):
     return sum(multiplied_item_content)
 
 
+def organise_per_file(empty_space_disk_map):
+    per_file_disk_map = []
+    file = []
+    for i in range(len(empty_space_disk_map) - 1):
+        file.append(empty_space_disk_map[i])
+        # check if the occupied file is the same as the next, if not, it's a new file/empty space, so we append this
+        # file to the disk map and start a new file
+        if empty_space_disk_map[i] != empty_space_disk_map[i + 1]:
+            per_file_disk_map.append(file)
+            file = []
+        else:
+            continue
+    file.append(empty_space_disk_map[-1])
+    per_file_disk_map.append(file)
+    return per_file_disk_map
+
+
 def main():
     disk_map = FileHandling.read_file('input/day09.txt')
     empty_space_disk_map = visualise_space(disk_map)
     reorganised_disk_map = move_data(empty_space_disk_map)
     check_sum = calculate_checksum(reorganised_disk_map)
     print(f'first star: {check_sum}')
+
+    per_file_disk_map = organise_per_file(empty_space_disk_map)
 
 
 if __name__ == '__main__':
