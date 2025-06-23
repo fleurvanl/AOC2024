@@ -1,6 +1,6 @@
 import pytest
 
-from day09 import visualise_space, move_data
+from day09 import visualise_space, move_data, calculate_checksum
 
 @pytest.fixture
 def aoc():
@@ -13,3 +13,7 @@ def test_visualise_space(aoc):
 
 def test_move_data(aoc):
     assert move_data(visualise_space(aoc)) == [0, 2, 2, 1, 1, 1, 2, 2, 2, None, None, None, None, None, None]
+
+
+def test_calculate_checksum(aoc):
+    assert (calculate_checksum(move_data(visualise_space(aoc))) == 60)
