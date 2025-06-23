@@ -71,6 +71,36 @@ def organise_per_file(empty_space_disk_map):
     return per_file_disk_map
 
 
+def find_file(per_file_disk_map, size):
+    for i in range(len(per_file_disk_map) - 1, -1, -1):
+        if len(per_file_disk_map[i]) <= size:
+            return per_file_disk_map[i], i
+
+
+
+def move_data_per_file(per_file_disk_map):
+    for i in range(len(per_file_disk_map)):
+        # check if there's a file or empty space
+        if per_file_disk_map[i][0] == None:
+            # if it's empty, start looking for a file that fits here
+            size = len(per_file_disk_map[i])
+            file, index = find_file(per_file_disk_map, size)
+            # replace file
+            new_file = []
+            for i in range(size):
+                try:
+                    new_file.append(file[i])
+                except:
+                    new_file.append(None)
+            per_file_disk_map[i] = new_file
+            per_file_disk_map[index] = [None for _ in range(len(file))]
+        else:
+            continue
+    return per_file_disk_map
+
+
+
+
 def main():
     disk_map = FileHandling.read_file('input/day09.txt')
     empty_space_disk_map = visualise_space(disk_map)
@@ -79,7 +109,7 @@ def main():
     print(f'first star: {check_sum}')
 
     per_file_disk_map = organise_per_file(empty_space_disk_map)
-
+    reorganised_per_file_disk_map = move_data_per_file(per_file_disk_map)
 
 if __name__ == '__main__':
     main()
