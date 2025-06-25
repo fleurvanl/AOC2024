@@ -25,8 +25,8 @@ def test_organise_per_file(aoc):
 
 @pytest.fixture
 def aoc2():
-    return [[0, 0], [None, None, None], [1, 1, 1], [None, None, None], [2], [None, None, None], [2], [None, None, None],
-    [3, 3, 3], [None], [4, 4], [None], [5, 5, 5, 5], [None], [6, 6, 6, 6], [None], [7, 7, 7], [None], [8, 8, 8, 8], [9, 9]]
+    return [[0, 0], [None, None, None], [1, 1, 1], [None, None, None], [2], [None, None, None], [3, 3, 3], [None],
+            [4, 4], [None], [5, 5, 5, 5], [None], [6, 6, 6, 6], [None], [7, 7, 7], [None], [8, 8, 8, 8], [9, 9]]
 
 def test_move_data_per_file(aoc2):
     assert move_data_per_file(aoc2) == [[0, 0], [9, 9], [2], [1, 1, 1], [7, 7, 7], [None], [4, 4], [None], [3, 3, 3],
